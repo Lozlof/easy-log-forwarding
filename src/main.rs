@@ -1,8 +1,7 @@
 //! easy-log-forwarding/src/main.rs
 
-use better_logger::{LoggerSettings, NetworkFormat, logger, relay};
+use better_logger::{LoggerSettings, RelaySettings, NetworkFormat, logger, relay};
 use std::process::exit;
-use std::time::Duration as StdDur;
 use std::fs::read_to_string;
 use std::error::Error;
 use std::sync::Arc;
@@ -44,6 +43,11 @@ struct Config {
     async_logging: bool,
     machine_name: String,
     container_name: String,
+    relay_listen_address: String,
+    relay_output_url: String,
+    relay_output_format: ConfigNetworkFormat,
+    relay_cors_allowed_origins: Vec<String>,
+    relay_actix_workers: usize,
 }
 
 fn load_config(path: &str) -> Result<Config, Box<dyn Error>> {
@@ -51,7 +55,8 @@ fn load_config(path: &str) -> Result<Config, Box<dyn Error>> {
     return Ok(toml::from_str(&raw)?);
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let now = Local::now();
     let timestamp = format!("{}", now.format("%Y-%m-%d %H:%M:%S"));
 
@@ -63,13 +68,13 @@ fn main() {
             exit(1);
         }
     };
-    
+
     let machine_name_1 = config.machine_name.clone();
     let container_name_1 = config.container_name.clone();
     let machine_name_2 = config.machine_name.clone();
     let container_name_2 = config.container_name.clone();
 
-    let settings = LoggerSettings {
+    let logger_settings = LoggerSettings {
         terminal_logs: config.terminal_logs,
         terminal_log_lvl: config.terminal_log_lvl,
         wasm_logging: config.wasm_logging,
@@ -84,10 +89,18 @@ fn main() {
         async_logging: config.async_logging,
     };
 
-    if let Err(err) = logger::init(settings) {
+    if let Err(err) = logger::init(logger_settings) {
         eprintln!("{}: {:?}", timestamp, err);
         exit(1);
     }
+
+    let relay_settings = RelaySettings {
+        listen_address: config.relay_listen_address,
+        output_format: config.relay_output_format.into(),
+        output_url: config.relay_output_url,
+        cors_allowed_origins: config.relay_cors_allowed_origins,
+        actix_workers: config.relay_actix_workers,
+    };    
 
     let shutdown = Arc::new(Notify::new());
     let shutdown_for_task = shutdown.clone();
@@ -109,4 +122,28 @@ fn main() {
             }
         }
     });
+
+    match relay::start(relay_settings).await {
+        Ok(_) => {
+            shutdown.notify_waiters();
+            let log_message_1 = format!("\n{} - {}: {}\n{}", 
+                machine_name_1, 
+                container_name_1,
+                "EXITED WITH CONDITION: \"Ok()\"",
+                "If this was not planned, is an error"
+            );
+            logger::warn!("{}", log_message_1);
+        }
+        Err(error) => {
+            shutdown.notify_waiters();
+            let log_message_2 = format!("\n{} - {}: {}\n{}\n{}", 
+                machine_name_1, 
+                container_name_1,
+                "EXITED WITH CONDITION: \"Err()\"",
+                "ERROR:",
+                error
+            );
+            logger::error!("{}", log_message_2);
+        }
+    }
 }

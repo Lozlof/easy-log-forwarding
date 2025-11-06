@@ -357,9 +357,9 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "better-logger"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03dd4054cef051e09e17cd88e6e36a6318d22e5a8170ecf4165b7740f5558881"
+checksum = "7fdfd11b0ddc414e84874ca88de00a9cfc9c9bf8b736a8c8667f96da393d74d5"
 dependencies = [
  "actix-cors",
  "actix-web",
