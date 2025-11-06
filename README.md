@@ -1,5 +1,8 @@
 # easy-log-forwarding
-### For more details see: https://crates.io/crates/better-logger
+#### A demonstration of the `better-logger` `relay` feature 
+### For more details see:
+#### https://crates.io/crates/better-logger
+#### https://github.com/Gistyr/better-logger
 ## config.toml
 #### Put in same directory as the executable
 ```toml
