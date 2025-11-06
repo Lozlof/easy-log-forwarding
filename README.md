@@ -14,7 +14,7 @@ However, when running in the browser, `CORS (Cross-Origin Resource Sharing)` res
   - Website: https://test.com/
   - Logging endpoint: https://hooks.slack.com/
 - Fix this issue by creating the relay:
-  - https://test.com/ -> https://logs.test.com -> https://hooks.slack.com/
+  - https://test.com/ -> https://logs.test.com -> https://hooks.slack.com/  
 ## config.toml
 #### Put in same directory as the executable
 ```toml
@@ -42,3 +42,7 @@ field = "text"
 type = "JsonText"
 field = "text"
 ```
+### This executable is committed:
+```bash
+cargo +stable build --release --target x86_64-unknown-linux-gnu
+```   
