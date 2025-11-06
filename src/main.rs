@@ -123,6 +123,13 @@ async fn main() {
         }
     });
 
+    let starting_log_message = format!("\n{} - {}: {}", 
+        machine_name_1, 
+        container_name_1,
+        "STARTING"
+    );
+    logger::info!("{}", starting_log_message);
+
     match relay::start(relay_settings).await {
         Ok(_) => {
             shutdown.notify_waiters();
