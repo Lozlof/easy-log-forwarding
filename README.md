@@ -1,6 +1,7 @@
 # easy-log-forwarding
-
-#### config.toml
+### For more details see: https://crates.io/crates/better-logger
+## config.toml
+#### Put in same directory as the executable
 ```toml
 terminal_logs = true
 terminal_log_lvl = "error"
