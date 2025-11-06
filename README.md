@@ -1,8 +1,20 @@
 # easy-log-forwarding
-#### A demonstration of the `better-logger` `relay` feature 
+#### A demonstration of how the `better-logger` `relay` feature could be used in production
 ### For more details see:
 #### https://crates.io/crates/better-logger
 #### https://github.com/Gistyr/better-logger
+### When to use the `relay` feature:
+`better-logger` already includes built-in network logging for both native and wasm targets. By default, it sends log messages directly to a specified endpoint without needing any intermediary service.       
+However, when running in the browser, `CORS (Cross-Origin Resource Sharing)` restrictions can prevent requests from being sent to external domains.        
+**Example:**    
+- This senario works without a relay: 
+  - Website: https://test.com/
+  - Logging endpoint: https://logs.test.com/
+- This senario requires a relay:
+  - Website: https://test.com/
+  - Logging endpoint: https://hooks.slack.com/
+- Fix this issue by creating the relay:
+  - https://test.com/ -> https://logs.test.com -> https://hooks.slack.com/
 ## config.toml
 #### Put in same directory as the executable
 ```toml
