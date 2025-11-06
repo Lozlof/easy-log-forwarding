@@ -1,5 +1,8 @@
 # easy-log-forwarding
 #### A demonstration of how the `better-logger` `relay` feature could be used in production
+- Read the small amount of source code to see how it works
+- This code will work "out of the box"
+  - Just compile and modify the config.toml
 ### For more details see:
 #### https://crates.io/crates/better-logger
 #### https://github.com/Gistyr/better-logger
