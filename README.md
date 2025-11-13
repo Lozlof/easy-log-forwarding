@@ -51,4 +51,3 @@ field = "text"
 ```bash
 cargo +stable build --release --target x86_64-unknown-linux-gnu
 ```   
-o
