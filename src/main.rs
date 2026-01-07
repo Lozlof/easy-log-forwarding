@@ -114,9 +114,9 @@ async fn main() {
                     let heartbeat = format!("\n{} - {}: {}", 
                         machine_name_2, 
                         container_name_2,
-                        "HEARTBEAT - not a real error - HEARTBEAT"
+                        "HEARTBEAT --- HEARTBEAT"
                     );   
-                    logger::error!("{}", heartbeat);
+                    logger::info!("{}", heartbeat);
                 }
                 _ = shutdown_for_task.notified() => break,
             }
